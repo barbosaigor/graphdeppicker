@@ -8,23 +8,26 @@ import (
 )
 
 func TestChooseNodesByWeight(t *testing.T) {
-	nodes := map[string]uint32{"a": 10, "b": 20, "c": 7, "d": 6}
-	n, err := chooseNodesByWeight(nodes, 2)
-	if err != nil {
-		t.Error("ChooseNodesByWeight have returned an error: " + err.Error())
-	}
-	if len(n) != 2 {
-		t.Error("ChooseNodesByWeight not returned correct number of elements: 2 != " + fmt.Sprint(len(n)))
-	}
+	g := graphll.New()
+	g.Add("a", 4, []string{"c"})
+	g.Add("b", 5, []string{"e", "f"})
+	g.Add("c", 6, []string{"a", "b", "d"})
+	g.Add("d", 7, []string{})
+	g.Add("e", 2, []string{})
+	g.Add("f", 1, []string{"d", "e"})
 
-	for i := uint32(0); i < 500; i++ {
-		n, err = chooseNodesByWeight(nodes, i % 10)
-		fmt.Println(i, n, err)
+	for i := uint32(0); i < 100; i++ {
+		n, err := chooseNodesByWeight(toWeightedMap(g), i % 10)
+		// fmt.Println(i, fmt.Sprintf("{%v, %v}", i % 10, len(n)), n, err)
 		if err != nil {
 			t.Error("ChooseNodesByWeight have returned an error: " + err.Error())
 		}
-		if (i % 10 > 4 && uint32(len(n)) != 4) || (i % 10 < 5 && uint32(len(n)) != i % 10) {
-			t.Error(fmt.Sprintf("ChooseNodesByWeight not returned correct number of elements: %v != %v\n", i, len(n)))
+		if i % 10 > 6 && uint32(len(n)) != 6 {
+			s := i % 10
+			if s > 6 {
+				s = 6
+			}
+			t.Error(fmt.Sprintf("%v: chooseNodesByWeight should return %v elements but got %v", i, s, len(n)))
 		}
 	}
 }
@@ -59,14 +62,21 @@ func TestRun(t *testing.T) {
 	g.Add("a", 4, []string{"c"})
 	g.Add("b", 5, []string{"e", "f"})
 	g.Add("c", 6, []string{"a", "b", "d"})
-	g.Add("d", 7, []string{})
-	g.Add("e", 2, []string{})
-	g.Add("f", 1, []string{"d", "e"})
-	result, err := Run(g, 4)
-	if err != nil {
-		t.Error("Run returned an error, " + err.Error())
-	}
-	if len(result) != 4 {
-		t.Error("Run should return 4 elements but got " + fmt.Sprint(len(result)))
+	g.Add("d", 1, []string{})
+	g.Add("e", 1, []string{})
+	g.Add("f", 4, []string{"d", "e"})
+
+	for i := uint32(0); i < 100; i++ {
+		result, err := Run(g, i % 10)
+		if err != nil {
+			t.Error("Run returned an error, " + err.Error())
+		}
+		if i % 10 > 6 && uint32(len(result)) != 6 {
+			s := i % 10
+			if s > 6 {
+				s = 6
+			}
+			t.Error(fmt.Sprintf("%v: Run should return %v elements but got %v", i, s, len(result)))
+		}
 	}
 }
