@@ -48,7 +48,7 @@ func chooseNodesByWeight(buckets map[string]uint32, size uint32) (map[string]uin
 
 // toWeightedMap transform a graph to a map
 func toWeightedMap(graph graphll.GraphLL) map[string]uint32 {
-	m := make(map[string]uint32)
+	m := make(map[string]uint32, len(graph))
 	for bucket, _ := range graph {
 		w, _ := graph.GetWeight(bucket)
 		m[bucket] = w
@@ -60,14 +60,14 @@ func toWeightedMap(graph graphll.GraphLL) map[string]uint32 {
 func mergeDeps(graph graphll.GraphLL, nodes []string) (map[string]uint32, error) {
 	deps := make(map[string]uint32, len(nodes))
 	for _, node := range nodes {
-		d, depErr := graph.GetDeps(node)
-		if depErr != nil {
-			return nil, depErr
+		dps, err := graph.GetDeps(node)
+		if err != nil {
+			return nil, err
 		}
-		for _, dep := range d {
-			w, weightErr := graph.GetWeight(dep)
-			if weightErr != nil {
-				return nil, weightErr
+		for _, dep := range dps {
+			w, err := graph.GetWeight(dep)
+			if err != nil {
+				return nil, err
 			}
 			deps[dep] = w
 		}
