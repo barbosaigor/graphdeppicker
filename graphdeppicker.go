@@ -22,6 +22,9 @@ func weightSum(buckets map[string]uint32) uint32 {
 
 // chooseNodesByWeight chooses randomly n nodes by weight
 func chooseNodesByWeight(buckets map[string]uint32, size uint32) (map[string]uint32, error) {
+	if uint32(len(buckets)) < size {
+		size = uint32(len(buckets))
+	}
 	nodes := make(map[string]uint32, size)
 	p := picker.New()
 	for i := uint32(0); i < size; i++ {
