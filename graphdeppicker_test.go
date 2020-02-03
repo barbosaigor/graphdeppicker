@@ -18,7 +18,6 @@ func TestChooseNodesByWeight(t *testing.T) {
 
 	for i := uint32(0); i < 100; i++ {
 		n, err := chooseNodesByWeight(toWeightedMap(g), i % 10)
-		// fmt.Println(i, fmt.Sprintf("{%v, %v}", i % 10, len(n)), n, err)
 		if err != nil {
 			t.Error("ChooseNodesByWeight have returned an error: " + err.Error())
 		}
