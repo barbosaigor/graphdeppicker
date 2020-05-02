@@ -1,8 +1,3 @@
-// Package graphdeppicker implements a weight-based probability picker, 
-// which chooses dependencies on a graph.
-//
-// First the algorithm picks K nodes, then it picks N dependencies on those nodes.
-// Heavy nodes are more likely to be picked.
 package graphdeppicker
 
 import (
@@ -83,9 +78,9 @@ func toStrSlice(nodes map[string]uint32) []string {
 	return s
 }
 
-// Run gets a graph with 
+// Run gets a graph with
 // the amount of nodes to return.
-// The algorithm chooses nodes based 
+// The algorithm chooses nodes based
 // on node weight
 // and returns a set of nodes.
 func Run(graph graphll.GraphLL, size uint32) ([]string, error) {
@@ -93,9 +88,9 @@ func Run(graph graphll.GraphLL, size uint32) ([]string, error) {
 	if size > uint32(len(graph)) {
 		size = uint32(len(graph))
 	}
-	// Using an euristic for size, is possible to 
+	// Using an euristic for size, is possible to
 	// increase the initial scope
-	fstSize := uint32(math.Floor(float64(size) + float64(size) * float64(0.5)))
+	fstSize := uint32(math.Floor(float64(size) + float64(size)*float64(0.5)))
 	if fstSize > uint32(len(graph)) {
 		fstSize = size
 	}
