@@ -15,7 +15,7 @@ func weightSum(buckets map[string]uint32) uint32 {
 	return s
 }
 
-// chooseNodesByWeight chooses randomly n nodes by weight
+// chooseNodesByWeight chooses randomly n nodes taking into account the weight of each element
 func chooseNodesByWeight(buckets map[string]uint32, size uint32) (map[string]uint32, error) {
 	if uint32(len(buckets)) < size {
 		size = uint32(len(buckets))
@@ -41,11 +41,11 @@ func chooseNodesByWeight(buckets map[string]uint32, size uint32) (map[string]uin
 	return nodes, nil
 }
 
-// toWeightedMap transform a graph to a map
+// toWeightedMap transforms a graph to a map
 func toWeightedMap(graph graphll.GraphLL) map[string]uint32 {
 	m := make(map[string]uint32, len(graph))
-	for bucket, _ := range graph {
-		w, _ := graph.GetWeight(bucket)
+	for bucket := range graph {
+		w, _ := graph.Weight(bucket)
 		m[bucket] = w
 	}
 	return m
@@ -55,12 +55,12 @@ func toWeightedMap(graph graphll.GraphLL) map[string]uint32 {
 func mergeDeps(graph graphll.GraphLL, nodes []string) (map[string]uint32, error) {
 	deps := make(map[string]uint32, len(nodes))
 	for _, node := range nodes {
-		dps, err := graph.GetDeps(node)
+		dps, err := graph.Deps(node)
 		if err != nil {
 			return nil, err
 		}
 		for _, dep := range dps {
-			w, err := graph.GetWeight(dep)
+			w, err := graph.Weight(dep)
 			if err != nil {
 				return nil, err
 			}
@@ -78,12 +78,10 @@ func toStrSlice(nodes map[string]uint32) []string {
 	return s
 }
 
-// Run gets a graph with
-// the amount of nodes to return.
-// The algorithm chooses nodes based
-// on node weight
+// Pick gets a graph with the maximum amount of nodes that can be picked.
+// The algorithm randomly chooses the nodes, taking into account the weight of each node,
 // and returns a set of nodes.
-func Run(graph graphll.GraphLL, size uint32) ([]string, error) {
+func Pick(graph graphll.GraphLL, size uint32) ([]string, error) {
 	weightedNodes := toWeightedMap(graph)
 	if size > uint32(len(graph)) {
 		size = uint32(len(graph))

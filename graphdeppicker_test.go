@@ -1,9 +1,9 @@
 package graphdeppicker
 
 import (
-	"testing"
 	"fmt"
-	
+	"testing"
+
 	"github.com/barbosaigor/graphll"
 )
 
@@ -17,11 +17,11 @@ func TestChooseNodesByWeight(t *testing.T) {
 	g.Add("f", 1, []string{"d", "e"})
 
 	for i := uint32(0); i < 100; i++ {
-		n, err := chooseNodesByWeight(toWeightedMap(g), i % 10)
+		n, err := chooseNodesByWeight(toWeightedMap(g), i%10)
 		if err != nil {
 			t.Error("ChooseNodesByWeight have returned an error: " + err.Error())
 		}
-		if i % 10 > 6 && uint32(len(n)) != 6 {
+		if i%10 > 6 && uint32(len(n)) != 6 {
 			s := i % 10
 			if s > 6 {
 				s = 6
@@ -66,11 +66,11 @@ func TestRun(t *testing.T) {
 	g.Add("f", 4, []string{"d", "e"})
 
 	for i := uint32(0); i < 100; i++ {
-		result, err := Run(g, i % 10)
+		result, err := Pick(g, i%10)
 		if err != nil {
 			t.Error("Run returned an error, " + err.Error())
 		}
-		if i % 10 > 6 && uint32(len(result)) != 6 {
+		if i%10 > 6 && uint32(len(result)) != 6 {
 			s := i % 10
 			if s > 6 {
 				s = 6
